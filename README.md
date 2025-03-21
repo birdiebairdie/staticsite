@@ -1,1 +1,1 @@
-# bootdev_static_site
+# staticsite
