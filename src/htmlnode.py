@@ -14,14 +14,30 @@ class HTMLNode():
     )
 
   def to_html(self):
-    raise NotImplementedError
+    raise NotImplementedError("to_html method not implemented")
   
   def props_to_html(self):
+    if self.props is None:
+      return ""
     string = ""
     for key in self.props:
-      string = string + f' {key}="{self.props[key]}"'
+      string += f' {key}="{self.props[key]}"'
     return string
   
   def __repr__(self):
-    return f"HTMLNode({self.tag}, {self.value}, {self.children}, {self.props})"
+    return f"HTMLNode({self.tag}, {self.value}, children: {self.children}, {self.props})"
   
+class LeafNode(HTMLNode):
+  def __init__(self, tag, value, props=None):
+    super().__init__(tag, value, None, props)
+
+  def to_html(self):
+    # if self.value == None or self.value == "":
+    if not self.value:
+      raise ValueError("no text value provided")
+    if not self.tag:
+      return self.value
+    return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
+
+  def __repr__(self):
+    return f"LeafNode({self.tag}, {self.value}, {self.props})"
