@@ -2,7 +2,6 @@ import unittest
 
 from textnode import *
 
-
 class TestTextNode(unittest.TestCase):
     def test_eq(self):
         node = TextNode("This is a text node", TextType.BOLD)
@@ -53,24 +52,6 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(html_node.tag, "img")
         self.assertEqual(html_node.value, "")
         self.assertEqual(html_node.props, {"src": "bumblebeepictures.com", "alt": "picture of a bumblebee"})
-
-    def test_split_nodes_bold(self):
-        nodes = [
-            TextNode("This is text with a `code block` word", TextType.TEXT),
-            TextNode("This is text with a **bold** word", TextType.TEXT),
-            TextNode("This is text with an _italic_ word", TextType.TEXT),
-        ]
-
-        code_nodes = split_nodes_delimiter([nodes[0]], "`", TextType.CODE)
-        self.assertEqual(code_nodes[0], TextNode("This is text with a ", TextType.TEXT))
-        self.assertEqual(code_nodes[1], TextNode("code block", TextType.CODE))
-        self.assertEqual(code_nodes[2], TextNode(" word", TextType.TEXT))
-
-        bold_nodes = split_nodes_delimiter([nodes[1]], "**", TextType.BOLD)
-        self.assertEqual(bold_nodes[0], TextNode("This is text with a ", TextType.TEXT))
-        self.assertEqual(bold_nodes[1], TextNode("bold", TextType.BOLD))
-        self.assertEqual(bold_nodes[2], TextNode(" word", TextType.TEXT))
-
 
 if __name__ == "__main__":
     unittest.main()

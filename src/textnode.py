@@ -1,5 +1,6 @@
 from enum import Enum
 from htmlnode import LeafNode
+import re
 
 class TextType(Enum):
   TEXT = "text"
@@ -41,22 +42,7 @@ def text_node_to_html_node(text_node):
     case _:
       raise Exception("not a valid text type")
     
-def split_nodes_delimiter(old_nodes, delimiter, new_text_type):
-  new_nodes = []
-  for node in old_nodes:
-    if node.text_type != TextType.TEXT:
-      new_nodes += node
-    elif node.text.count(delimiter) != 2:
-      raise Exception("invalid syntax")
-    else:
-      split_node = node.text.split(delimiter)
-      node_list = [
-        TextNode(split_node[0], TextType.TEXT),
-        TextNode(split_node[1], new_text_type),
-        TextNode(split_node[2], TextType.TEXT),
-        ]
-      new_nodes.extend(node_list)
-  return new_nodes
+  
 
 
 
