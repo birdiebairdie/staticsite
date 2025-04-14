@@ -23,6 +23,15 @@ def split_nodes_delimiter(old_nodes, delimiter, new_text_type):
 
   # need an empty list to populate
   new_nodes = []
+
+# Handle case where old_nodes might be a single string instead of a list of TextNodes
+  if isinstance(old_nodes, str):
+      # Convert the string to a TextNode first
+      old_nodes = [TextNode(old_nodes, TextType.TEXT)]
+  elif not isinstance(old_nodes, list):
+      # If it's a single TextNode object, wrap it in a list
+      old_nodes = [old_nodes]
+
   # for every item in the list of nodes (which may only contain one item)
   for old_node in old_nodes:
     # if the text type is anothing other than TEXT, just add it to the final list as is
@@ -78,6 +87,8 @@ def split_nodes_image(old_nodes,):
       if sections[1]:
         remaining_nodes = split_nodes_image([TextNode(sections[1], TextType.TEXT)])
         new_nodes.extend(remaining_nodes)
+    else:
+      new_nodes.append(node)
   return new_nodes
       
 def split_nodes_link(old_nodes):
@@ -86,7 +97,7 @@ def split_nodes_link(old_nodes):
     if len(extract_markdown_links(node.text)) > 0:
       link_tuple = extract_markdown_links(node.text)[0]
       link_text, url = link_tuple
-      sections = node.text.split(f"![{link_text}]({url})", 1)
+      sections = node.text.split(f"[{link_text}]({url})", 1)
 
       if sections[0]:
         new_nodes.append(TextNode(sections[0], TextType.TEXT))
@@ -95,6 +106,8 @@ def split_nodes_link(old_nodes):
       if sections[1]:
         remaining_nodes = split_nodes_link([TextNode(sections[1], TextType.TEXT)])
         new_nodes.extend(remaining_nodes)
+    else:
+      new_nodes.append(node)
   return new_nodes
 
 def text_to_textnodes(text):
