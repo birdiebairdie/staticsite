@@ -1,28 +1,27 @@
 import os
 import shutil
 
-def copy_static_files(source, destination):
-  if os.path.exists(destination):
-    shutil.rmtree(destination)
+from copystatic import copy_static_files
+from generate_content import generate_page
 
-  os.mkdir(destination)
-
-  items = os.listdir(source)
-
-  for item in items:
-    source_item = os.path.join(source, item)
-    destination_item = os.path.join(destination, item)
-
-    if os.path.isfile(source_item):
-      shutil.copy(source_item, destination_item)
-      print(f"Copied file: {source_item} to {destination_item}")
-    else:
-      os.mkdir(destination_item)
-      print(f"Created directory: {destination_item}")
-      copy_static_files(source_item, destination_item)
+dir_path_static = './static'
+dir_path_public = './public'
+dir_path_content = './content'
+template_path = './template.html'
 
 def main():
-  copy_static_files('static', 'public')
+  print('Deleting public directory...')
+  if os.path.exists(dir_path_public):
+    shutil.rmtree(dir_path_public)
 
+  print('Copying static files to public directory...')
+  copy_static_files(dir_path_static, dir_path_public)
+
+  print('Generating page...')
+  generate_page(
+    os.path.join(dir_path_content, 'index.md'),
+    template_path,
+    os.path.join(dir_path_public, 'index.html'),
+  )
 if __name__ == "__main__":
   main()

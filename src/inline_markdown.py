@@ -3,24 +3,6 @@ import re
 from textnode import TextNode, TextType
 
 def split_nodes_delimiter(old_nodes, delimiter, new_text_type):
-  # new_nodes = []
-  # for node in old_nodes:
-  #   if node.text_type != TextType.TEXT:
-  #     new_nodes += node
-  #     continue
-  #   elif node.text.count(delimiter) != 2:
-  #     raise ValueError("invalid syntax")
-  #   else:
-  #     split_node = node.text.split(delimiter)
-  #     node_list = [
-  #       TextNode(split_node[0], TextType.TEXT),
-  #       TextNode(split_node[1], new_text_type),
-  #       TextNode(split_node[2], TextType.TEXT),
-  #       ]
-  #     new_nodes.extend(node_list)
-  # return new_nodes
-
-
   # need an empty list to populate
   new_nodes = []
 
@@ -111,9 +93,10 @@ def split_nodes_link(old_nodes):
   return new_nodes
 
 def text_to_textnodes(text):
-  split_bold = split_nodes_delimiter(text, "**", TextType.BOLD)
-  split_italic = split_nodes_delimiter(split_bold, "_", TextType.ITALIC)
-  split_code = split_nodes_delimiter(split_italic, "`", TextType.CODE)
-  split_images = split_nodes_image(split_code)
-  final = split_nodes_link(split_images)
-  return final
+  nodes = [TextNode(text, TextType.TEXT)]
+  nodes = split_nodes_delimiter(nodes, "**", TextType.BOLD)
+  nodes = split_nodes_delimiter(nodes, "_", TextType.ITALIC)
+  nodes = split_nodes_delimiter(nodes, "`", TextType.CODE)
+  nodes = split_nodes_image(nodes)
+  nodes = split_nodes_link(nodes)
+  return nodes

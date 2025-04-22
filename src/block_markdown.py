@@ -44,17 +44,14 @@ def block_to_block_type(markdown):
       if not re.match ('^(- )', line):
         return BlockType.PARAGRAPH
     return BlockType.ULIST
-  if re.match('1. ', markdown):
+  if markdown.startswith("1. "):
     i = 1
     for line in lines:
-      if line == "":
-        continue
-      if not re.match (f'^{i}\. ', line):
+      if not line.startswith(f"{i}. "):
         return BlockType.PARAGRAPH
       i += 1
     return BlockType.OLIST
-  else:
-    return BlockType.PARAGRAPH
+  return BlockType.PARAGRAPH
   
 def markdown_to_html_node(markdown):
   children = []
@@ -150,9 +147,11 @@ def olist_to_html_node(block):
   list_items = block.split('\n')
   html_items = []
   for item in list_items:
-    text = item[2:]
-    children = text_to_children(text)
-    html_items.append(ParentNode('li', children))
+    match = re.match(r'^\d+\.\s(.*)', item)
+    if match:
+      text = match.group(1)
+      children = text_to_children(text)
+      html_items.append(ParentNode('li', children))
   return ParentNode('ol', html_items)
     
 
