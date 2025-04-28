@@ -1,7 +1,7 @@
 import os
 import shutil
 
-def copy_static_files(source, destination):
+def copy_static_files_recursive(source, destination):
   if not os.path.exists(destination):
     os.mkdir(destination)
     print(f"Created directory: {destination}")
@@ -16,4 +16,4 @@ def copy_static_files(source, destination):
     if os.path.isfile(from_path):
       shutil.copy(from_path, dest_path)
     else:
-      copy_static_files(from_path, dest_path)
+      copy_static_files_recursive(from_path, dest_path)
